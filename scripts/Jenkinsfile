@@ -18,7 +18,6 @@ if (params.MODE == "PROMOTE") {
 
     //Note: assetDirectory is on the infrapool agent, not the local Jenkins agent.
   }
-  release.copyEnterpriseRelease(params.VERSION_TO_PROMOTE)
   return
 }
 
@@ -58,8 +57,10 @@ pipeline {
     stage('Get InfraPool ExecutorV2 Agent(s)') {
       steps{
         script {
-          // Request ExecutorV2 agents for 1 hour
-          infrapool = getInfraPoolAgent.connected(type: "ExecutorV2", quantity: 1, duration: 1)[0]
+          // Request ExecutorV2 agents for 1 hour(s)
+          INFRAPOOL_EXECUTORV2_AGENTS = getInfraPoolAgent(type: "ExecutorV2", quantity: 1, duration: 1)
+          INFRAPOOL_EXECUTORV2_AGENT_0 = INFRAPOOL_EXECUTORV2_AGENTS[0]
+          infrapool = infraPoolConnect(INFRAPOOL_EXECUTORV2_AGENT_0, {})
         }
       }
     }
@@ -96,19 +97,9 @@ pipeline {
       steps {
         script {
           release(infrapool, { billOfMaterialsDirectory, assetDirectory ->
-            /* Publish release artifacts to all the appropriate locations
-               Copy any artifacts to assetDirectory on the infrapool node
-               to attach them to the Github release.
-
-               If your assets are on the infrapool node in the target
-               directory, use a copy like this:
-                  infrapool.agentSh "cp target/* ${assetDirectory}"
-               Note That this will fail if there are no assets, add :||
-               if you want the release to succeed with no assets.
-
-               If your assets are in target on the main Jenkins agent, use:
-                 infrapool.agentPut(from: 'target/', to: assetDirectory)
-            */
+            // Publish release artifacts to all the appropriate locations
+            // Copy any artifacts to assetDirectory to attach them to the Github release
+            infrapool.agentSh "mkdir -p target; cp target/* ${assetDirectory}"
           })
         }
       }
