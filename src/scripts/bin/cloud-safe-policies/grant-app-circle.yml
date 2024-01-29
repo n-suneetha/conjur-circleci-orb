@@ -1,0 +1,7 @@
+#conjur authenticator enable --id authn-jwt/circleci2
+#conjur policy load -f grant-app-circle.yml -b conjur/authn-jwt/circleci2
+- !grant
+  roles:
+    - !group apps
+  members:
+    - !group /data/circleci2-apps
