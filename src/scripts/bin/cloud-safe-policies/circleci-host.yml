@@ -1,0 +1,16 @@
+#conjur policy load -f circleci-host.yml -b data
+- !policy
+  id: circleci2-apps
+  body:
+      - !group
+
+      - &hosts
+        - !host
+          id: 9a5d9502-2210-4ec8-b9fc-59ce86721264
+          annotations:
+              authn-jwt/circleci2/sub: org/56ee901c-258a-4318-9e77-a59fa0c6b976/project/9a5d9502-2210-4ec8-b9fc-59ce86721264/user/e58ab7a6-2274-405d-a8f6-3d4c3e7527a0/vcs-origin/github.com/Nirupma-Verma/private-conjur-orb/vcs-ref/refs/heads/alpha
+              authn/api-key: true
+
+      - !grant
+        role: !group
+        members: *hosts
