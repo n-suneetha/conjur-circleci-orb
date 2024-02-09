@@ -136,14 +136,13 @@ function single_secret_fetch() {
     local secretVal="${result}"
 
     if [[ "${secretVal}" == "Malformed authorization token" ]]; then
-      echo "::error::Malformed authorization token. Please check your Conjur account, username, and API key. If using authn-jwt, check your Host ID annotations are correct."
+      echo "::error::Malformed authorization token. Please check your Conjur account, username, and service id. If using authn-jwt, check your Host ID annotations are correct."
       exit 1
     elif [[ "${secretVal}" == *"is empty or not found"* ]]; then
       flag=true
       err_msg+="${secretId}, "
     else
-      echo "export ${secretMulti[$secretId]}='${secretVal}'" >>"${BASH_ENV}" # Set environment variable
-      echo "Secret fetched successfully. Environment variable ${secretMulti[$secretId]} set. "
+      echo "As the job will be marked as unsuccessful, the environment variable for secrets found is not set."
     fi
   done
 
@@ -217,7 +216,10 @@ function fetch_secret() {
 
   multiple_secrets_fetch
   #### If Batch retrieval of secrets not found 
-  if [[ "${secretsVal}" == *"is empty or not found"* ]]; then
+  if [[ "${secretVal}" == "Malformed authorization token" ]]; then
+      echo "::error::Malformed authorization token. Please check your Conjur account, username, and service id. If using authn-jwt, check your Host ID annotations are correct."
+      exit 1
+  elif [[ "${secretsVal}" == *"is empty or not found"* ]]; then
     echo "${secretsVal}. Batch retrieval failed, falling to single secret fetch."
     single_secret_fetch
   else
