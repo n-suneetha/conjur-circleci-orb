@@ -1,0 +1,12 @@
+version: '3'
+services:
+  circleci:
+    build:
+      context: .
+      dockerfile: Dockerfile.circleci
+    environment:
+      CIRCLECI_API_KEY: $API_KEY
+      CIRCLECI_ORG_ID: $ORG_ID
+      CIRCLECI_NAMESPACE: $NAMESPACE
+    volumes:
+      - ./dist:/conjur-circleci-orb/dist

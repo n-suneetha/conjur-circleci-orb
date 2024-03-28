@@ -72,6 +72,13 @@ pipeline {
         }
       }
     }
+    stage('Build artifacts') {
+      steps {
+        script {
+          infrapool.agentSh 'summon ./bin/build.sh'
+        }
+      }
+    }
     stage('Stage running on Atlantis Jenkins Agent Container'){
         steps {
             sh 'scripts/in-container.sh'
@@ -109,6 +116,7 @@ pipeline {
                If your assets are in target on the main Jenkins agent, use:
                  infrapool.agentPut(from: 'target/', to: assetDirectory)
             */
+            infrapool.agentSh "cp -r dist/*.yml  dist/*_SHA256SUMS ${assetDirectory}"
           })
         }
       }
