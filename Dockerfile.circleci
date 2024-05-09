@@ -1,0 +1,7 @@
+FROM circleci/circleci-cli:latest
+
+WORKDIR /conjur-circleci-orb
+
+COPY . .
+
+RUN circleci telemetry disable
