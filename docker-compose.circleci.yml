@@ -8,5 +8,7 @@ services:
       CIRCLECI_API_KEY: $API_KEY
       CIRCLECI_ORG_ID: $ORG_ID
       CIRCLECI_NAMESPACE: $NAMESPACE
+      VERSION: $VERSION
+      ASSET_DIRECTORY: $ASSET_DIRECTORY
     volumes:
       - ./dist:/conjur-circleci-orb/dist
