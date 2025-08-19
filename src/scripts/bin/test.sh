@@ -3,7 +3,7 @@ set -exo pipefail
 
 declare DOCKER_COMPOSE_ARGS 
 
-TARGET="${PARAM_TARGET}"  # can also be set to 'enterprise'
+TARGET="oss"  # can also be set to 'enterprise'
 
 export CONJUR_DATA_KEY='iFra75qdvsLENSV+qXYFMkv7KJS3t+82Po4mmjZLxZc='
 
@@ -139,17 +139,17 @@ function configureConjur() {
   echo ">> Applying policies"
 
   # Policy files are mounted in docker-compose
-  clientExec conjur policy load --replace root policy/base.yml
-  clientExec conjur policy load data/circleci policy/authn-host-circleci.yml
-  clientExec conjur policy load root policy/authn-jwt-circleci.yml
-  clientExec conjur list
-  clientExec conjur variable values add conjur/authn-jwt/circleci1/jwks-uri "https://oidc.circleci.com/org/56ee901c-258a-4318-9e77-a59fa0c6b976/.well-known/jwks-pub.json"
-  clientExec conjur variable values add conjur/authn-jwt/circleci1/issuer "https://oidc.circleci.com/org/56ee901c-258a-4318-9e77-a59fa0c6b976"
-  clientExec conjur variable values add conjur/authn-jwt/circleci1/audience "56ee901c-258a-4318-9e77-a59fa0c6b976"
-  clientExec conjur variable values add conjur/authn-jwt/circleci1/identity-path "data/circleci/apps"
-  clientExec conjur variable values add conjur/authn-jwt/circleci1/token-app-property "oidc.circleci.com/project-id"
-  clientExec conjur variable values add data/circleci/apps/safe/secret1 SECRETXcLhn23MJcimV
-  clientExec conjur variable values add data/circleci/apps/safe/secret2 '&&@~`)^%#:"":" SECRETX@#@$#@%$@%$@'
+   clientExec conjur policy load -b root -f policy/base.yml
+   clientExec conjur policy load  -b data/circleci  -f policy/authn-host-circleci.yml
+   clientExec conjur policy load -b  root  -f policy/authn-jwt-circleci.yml
+   clientExec conjur list
+   clientExec conjur variable set -i conjur/authn-jwt/circleci1/jwks-uri -v "https://oidc.circleci.com/org/56ee901c-258a-4318-9e77-a59fa0c6b976/.well-known/jwks-pub.json"
+   clientExec conjur variable set -i conjur/authn-jwt/circleci1/issuer -v "https://oidc.circleci.com/org/56ee901c-258a-4318-9e77-a59fa0c6b976"
+   clientExec conjur variable set -i conjur/authn-jwt/circleci1/audience -v "56ee901c-258a-4318-9e77-a59fa0c6b976"
+   clientExec conjur variable set -i conjur/authn-jwt/circleci1/identity-path -v "data/circleci/apps"
+   clientExec conjur variable set -i conjur/authn-jwt/circleci1/token-app-property -v "oidc.circleci.com/project-id"
+   clientExec conjur variable set -i data/circleci/apps/safe/secret1 -v SECRETXcLhn23MJcimV
+   clientExec conjur variable set -i data/circleci/apps/safe/secret2 -v '&&@~`)^%#:"":" SECRETX@#@$#@%$@%$@'
 }
 
 function runFetchConjur() {

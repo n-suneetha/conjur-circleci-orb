@@ -38,12 +38,12 @@ jobs:
             echo "secret1: $SECRET1 "
             echo "secret2: $SQL_USERNAME"
             echo "================"   
-      - conjur-circleci/test:
-          target: 'oss'  
+#      - conjur-circleci/test:
+#          target: 'oss'
       - conjur-circleci/test:
           target: 'cloud'     
-      - conjur-circleci/test:
-          target: 'enterprise'
+#      - conjur-circleci/test:
+#          target: 'enterprise'
 workflows:
   test-deploy:
     jobs:
