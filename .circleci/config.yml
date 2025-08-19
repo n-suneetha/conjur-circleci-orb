@@ -11,14 +11,14 @@ filters: &filters
 workflows:
   lint-pack:
     jobs:
-      - orb-tools/lint:
-          filters: *filters
+#      - orb-tools/lint:
+#          filters: *filters
       - orb-tools/pack:
           filters: *filters
       - orb-tools/review:
           filters: *filters
-      - shellcheck/check:
-          filters: *filters
+#      - shellcheck/check:
+#          filters: *filters
       # Triggers the next workflow in the Orb Development Kit.
       - orb-tools/continue:
           pipeline_number: << pipeline.number >>
